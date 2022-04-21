@@ -18,7 +18,10 @@ use axum::{
 };
 use axum_client_ip::ClientIp;
 use http::{HeaderValue, Request, StatusCode};
+use hyper::Client;
+use hyper_trust_dns::{TrustDnsResolver, RustlsHttpsConnector};
 use std::net::SocketAddr;
+use std::sync::Arc;
 use tokio::signal;
 use tower::Service;
 use tower_http::{
@@ -41,6 +44,8 @@ impl MakeRequestId for XRequestId {
     }
 }
 
+type ClientType = Client<RustlsHttpsConnector>;
+
 pub async fn serve<const BEHIND_PROXY: bool, const ALLOW_DOTENV_ON_DEBUG: bool>(
     api_router: Option<Router>,
     proxy_router: Option<Router>,
@@ -52,6 +57,10 @@ pub async fn serve<const BEHIND_PROXY: bool, const ALLOW_DOTENV_ON_DEBUG: bool>(
         #[cfg(debug_assertions)]
         info!("Using .env file if present");
     }
+
+    let https = TrustDnsResolver::default().into_rustls_webpki_https_connector();
+
+    let client = Client::builder().build::<_, hyper::Body>(https);
     
     let proxy_router = proxy_router.unwrap_or_else(|| {
         Router::new().route(
@@ -136,6 +145,7 @@ pub async fn serve<const BEHIND_PROXY: bool, const ALLOW_DOTENV_ON_DEBUG: bool>(
         info!("Running on port {}", port);
         let app = Router::new().route("/", axum::routing::any_service(service))            .layer(CompressionLayer::new())
         .layer(PropagateRequestIdLayer::x_request_id())
+        .layer(axum::Extension(Arc::new(client)))
         .layer(TraceLayer::new_for_http().make_span_with(|request: &Request<Body>| {
             let request_id = request.headers().get(&*headers::http::X_REQUEST_ID).unwrap().to_str().unwrap();
             info!("Received request {} using {} on {}", request_id,request.method(), request.uri().path());
@@ -195,6 +205,8 @@ pub async fn proxy_request<const FORWARD_INTERNAL_ERRORS: bool>(
         let headers = req.headers().clone();
         let mut parts = RequestParts::new(req);
 
+        let client  = parts.extract::<axum::Extension<Arc<ClientType>>>().await.unwrap();
+
         match ClientIp::from_request(&mut parts).await {
             Ok(client_ip) => match headers.get(&*headers::http::X_CF_FORWARDED_URL) {
                 Some(forward_url) => {
@@ -203,6 +215,7 @@ pub async fn proxy_request<const FORWARD_INTERNAL_ERRORS: bool>(
                         client_ip.0,
                         forward_url.to_str().unwrap(),
                         parts.try_into_request().unwrap(),
+                        &client
                     )
                     .await
                     {

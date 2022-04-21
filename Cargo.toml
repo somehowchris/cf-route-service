@@ -17,7 +17,7 @@ dotenvy = "0.15.1"
 headers = "0.3.7"
 http = "0.2.6"
 http-body = "0.4.4"
-hyper-reverse-proxy = { git = "https://github.com/felipenoris/hyper-reverse-proxy.git" }
+hyper-reverse-proxy = { git = "https://github.com/somehowchris/hyper-reverse-proxy.git", branch="feature/static-client" }
 lazy_static = "1.4.0"
 serde = "1.0.136"
 serde_json = "1.0.79"
@@ -26,6 +26,14 @@ tower = "0.4.12"
 tower-http = { version = "0.2.5", features = ["tracing", "trace", "request-id","compression-br", "compression-deflate", "compression-gzip"] }
 tracing = "0.1.32"
 uuid = { version = "0.8.2", features = ["v4"] }
+hyper-trust-dns = { version = "0.4.2", features = [
+  "rustls-http2",
+  "dnssec-ring",
+  "dns-over-https-rustls",
+  "rustls-webpki",
+] }
+hyper = { version = "0.14.18", features = ["full"] }
+
 
 [features]
 http2 = ["axum/http2"]
