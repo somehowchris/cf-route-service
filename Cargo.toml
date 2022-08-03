@@ -19,7 +19,7 @@ http = "0.2.8"
 http-body = "0.4.5"
 hyper-reverse-proxy = { git = "https://github.com/somehowchris/hyper-reverse-proxy.git", branch="feature/static-client" }
 lazy_static = "1.4.0"
-serde = "1.0.141"
+serde = "1.0.142"
 serde_json = "1.0.82"
 tokio = { version = "1.20.1", features = ["signal", "macros"] }
 tower = "0.4.13"
