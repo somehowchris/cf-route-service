@@ -10,7 +10,7 @@ path = "./src/lib.rs"
 
 [dependencies]
 async-trait = "0.1.57"
-axum = { version = "0.5.15", features = ["headers"] }
+axum = { version = "0.5.16", features = ["headers"] }
 axum-client-ip = "0.2.0"
 cf-env = "0.1.8"
 dotenvy = "0.15.2"
