@@ -13,7 +13,7 @@ async-trait = "0.1.57"
 axum = { version = "0.5.16", features = ["headers"] }
 axum-client-ip = "0.2.0"
 cf-env = "0.1.8"
-dotenvy = "0.15.5"
+dotenvy = "0.15.6"
 headers = "0.3.8"
 http = "0.2.8"
 http-body = "0.4.5"
