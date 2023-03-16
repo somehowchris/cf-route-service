@@ -25,7 +25,7 @@ tokio = { version = "1.21.2", features = ["signal", "macros"] }
 tower = "0.4.13"
 tower-http = { version = "0.3.4", features = ["tracing", "trace", "request-id","compression-br", "compression-deflate", "compression-gzip"] }
 tracing = "0.1.36"
-uuid = { version = "1.1.2", features = ["v4"] }
+uuid = { version = "1.3.0", features = ["v4"] }
 hyper-trust-dns = { version = "0.5.0", features = [
   "rustls-http2",
   "dnssec-ring",
