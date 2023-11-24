@@ -14,7 +14,7 @@ axum = { version = "0.6.19", features = ["headers"] }
 axum-client-ip = "0.4.1"
 cf-env = "0.1.8"
 dotenvy = "0.15.7"
-headers = "0.3.8"
+headers = "0.4.0"
 http = "0.2.9"
 http-body = "0.4.5"
 hyper-reverse-proxy = { git = "https://github.com/somehowchris/hyper-reverse-proxy.git", branch="feature/static-client" }
