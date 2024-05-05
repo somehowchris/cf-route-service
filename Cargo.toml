@@ -32,7 +32,7 @@ hyper-trust-dns = { version = "0.5.0", features = [
   "dns-over-https-rustls",
   "rustls-webpki",
 ] }
-hyper = { version = "0.14.27", features = ["full"] }
+hyper = { version = "1.0.0", features = ["full"] }
 
 
 [features]
